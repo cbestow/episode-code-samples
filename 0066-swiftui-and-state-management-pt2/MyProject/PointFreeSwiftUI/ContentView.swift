@@ -37,6 +37,7 @@ class AppState: ObservableObject {
 
 struct CounterView: View {
     @ObservedObject var state: AppState
+    @State var isPrimeModalShown: Bool = false
 
     var body: some View {
         VStack {
@@ -49,13 +50,28 @@ struct CounterView: View {
                     Text("+")
                 }
             }
-            Button(action: {}) {
+            Button(action: {
+                self.isPrimeModalShown = true
+            }) {
                 Text("Is this prime?")
             }
             Button(action: {}) {
                 Text("What is the \(ordinal(self.state.count)) prime?")
             }
-        }.font(.title)
+        }
+        .font(.title)
+        .navigationBarTitle("Counter Demo")
+        .sheet(isPresented: self.$isPrimeModalShown) {
+            IsPrimeModalView(state: self.state)
+        }
+    }
+}
+
+struct IsPrimeModalView: View {
+    @ObservedObject var state: AppState
+    
+    var body: some View {
+        Text("is \(self.state.count) prime?")
     }
 }
 
